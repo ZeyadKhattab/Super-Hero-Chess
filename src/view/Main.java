@@ -12,7 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
-
+import model.game.Cell;
 import model.game.Game;
 import model.game.Player;
 
@@ -33,11 +33,15 @@ public class Main extends Application {
 		GridPane gridPane = new GridPane();
 		for (int i = 0; i < game.getBoardHeight(); i++)
 			for (int j = 0; j < game.getBoardWidth(); j++) {
-				FileInputStream input = new FileInputStream("images/resize.jpg");
+				Cell cell = game.getCellAt(i, j);
+				Button button;
+
+				FileInputStream input = new FileInputStream(cell.isEmpty() ? "images/empty.jpg" : "images/resize.jpg");
 				Image image = new Image(input);
 				ImageView imageView = new ImageView(image);
-				Button button = new Button("",imageView);
-				button.setId(""+(i * game.getBoardHeight() + j));
+				button = new Button("", imageView);
+
+				button.setId("" + (i * game.getBoardHeight() + j));
 				button.setOnAction(value -> {
 					System.out.println(((Button) value.getSource()).getId());
 				});

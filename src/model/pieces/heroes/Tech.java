@@ -14,7 +14,7 @@ import model.pieces.Piece;
 public class Tech extends ActivatablePowerHero {
 
 	public Tech(Player player, Game game, String name) {
-		super(player, game, name);
+		super(player, game, name,"tech");
 	}
 
 	@Override

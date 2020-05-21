@@ -26,4 +26,7 @@ public class Cell {
 	public String toString() {
 		return piece == null ? "n" : piece.toString();
 	}
+	public boolean isEmpty() {
+		return piece==null;
+	}
 }

@@ -24,4 +24,8 @@ public class SideKickP2 extends SideKick {
 	public void moveUpLeft() throws UnallowedMovementException {
 		throw new UnallowedMovementException(this, Direction.UPLEFT);
 	}
+	@Override
+	public String getImageName() {
+		return this.getType()+"p2";
+	}
 }

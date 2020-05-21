@@ -13,7 +13,7 @@ import model.pieces.Piece;
 public class Ranged extends ActivatablePowerHero {
 
 	public Ranged(Player player, Game game, String name) {
-		super(player, game, name);
+		super(player, game, name,"ranged");
 	}
 
 	@Override

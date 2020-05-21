@@ -24,12 +24,17 @@ public abstract class Piece implements Movable {
 	private Game game;
 	private int posI;
 	private int posJ;
-
-	public Piece(Player p, Game g, String name) {
+	private String type;
+	public Piece(Player p, Game g, String name,String type) {
 		owner = p;
 		this.game = g;
 		this.name = name;
+		this.type=type;
 	}
+	public String getType() {
+		return type;
+	}
+	public abstract String getImageName();
 
 	@Override
 	public void move(Direction r) throws UnallowedMovementException, OccupiedCellException, WrongTurnException {

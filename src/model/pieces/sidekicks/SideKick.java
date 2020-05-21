@@ -14,7 +14,7 @@ import model.pieces.heroes.Tech;
 public abstract class SideKick extends Piece {
 
 	public SideKick(Player player, Game game, String name) {
-		super(player, game, name);
+		super(player, game, name,"sidekick");
 	}
 
 	public void attack(Piece target) {
