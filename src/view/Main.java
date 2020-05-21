@@ -7,7 +7,13 @@ import javax.swing.JOptionPane;
 import javafx.application.Application;
 import javafx.scene.control.Button;
 import javafx.scene.control.Labeled;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
@@ -15,6 +21,7 @@ import javafx.scene.Scene;
 import model.game.Cell;
 import model.game.Game;
 import model.game.Player;
+import model.pieces.Piece;
 
 public class Main extends Application {
 
@@ -29,28 +36,20 @@ public class Main extends Application {
 		String player1Name = /* JOptionPane.showInputDialog("Player 1 Name") */"zoz",
 				player2Name = /* JOptionPane.showInputDialog("Player 2 Name") */"bro";
 		Game game = new Game(new Player(player1Name), new Player(player2Name));
-
-		GridPane gridPane = new GridPane();
-		for (int i = 0; i < game.getBoardHeight(); i++)
-			for (int j = 0; j < game.getBoardWidth(); j++) {
-				Cell cell = game.getCellAt(i, j);
-				Button button;
-
-				FileInputStream input = new FileInputStream(cell.isEmpty() ? "images/empty.jpg" : "images/resize.jpg");
-				Image image = new Image(input);
-				ImageView imageView = new ImageView(image);
-				button = new Button("", imageView);
-
-				button.setId("" + (i * game.getBoardHeight() + j));
-				button.setOnAction(value -> {
-					System.out.println(((Button) value.getSource()).getId());
-				});
-				gridPane.add(button, j, i);
-			}
-
-		Scene scene = new Scene(gridPane, game.getBoardWidth() * 100, game.getBoardHeight() * 80);
+		BorderPane pane = new BorderPane();
+		Board board = new Board(game);
+		pane.setCenter(board.getBoard());
+		Scene scene = new Scene(pane, game.getBoardWidth() * 140, game.getBoardHeight() * 110);
 		primaryStage.setScene(scene);
 		primaryStage.show();
+
+		Button attack = new Button("attack");
+		Button usePower = new Button("Use power");
+		FlowPane buttons = new FlowPane();
+
+		buttons.getChildren().add(attack);
+		buttons.getChildren().add(usePower);
+		pane.setTop(buttons);
 
 	}
 
