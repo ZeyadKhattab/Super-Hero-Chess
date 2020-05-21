@@ -57,8 +57,8 @@ public class Game {
 		board[i][j].setPiece(p);
 	}
 
+	
 	public Game(Player player1, Player player2) {
-		super();
 		this.player1 = player1;
 		this.player2 = player2;
 
@@ -212,5 +212,9 @@ public class Game {
 	public int getBoardHeight() {
 		return boardHeight;
 	}
+	public Cell[][]getBoard(){
+		return board;
+	}
+	
 
 }
