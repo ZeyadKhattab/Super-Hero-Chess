@@ -17,7 +17,7 @@ public class GUI extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		Parent root = FXMLLoader.load(getClass().getResource("/view/Main.fxml"));
-		Scene scene = new Scene(root);
+		Scene scene = new Scene(root,900,700);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		Board board=new Board(new Game(new Player("zoz"),new Player("bro")));

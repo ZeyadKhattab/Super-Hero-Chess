@@ -57,7 +57,9 @@ public class Game {
 		board[i][j].setPiece(p);
 	}
 
-	
+	public Game() {
+		this(new Player("Player 1"),new Player("Player 2"));
+	}
 	public Game(Player player1, Player player2) {
 		this.player1 = player1;
 		this.player2 = player2;
