@@ -1,6 +1,7 @@
 package model.pieces;
 
 import java.awt.Point;
+import java.util.ArrayList;
 
 import exceptions.OccupiedCellException;
 import exceptions.UnallowedMovementException;
@@ -25,15 +26,18 @@ public abstract class Piece implements Movable {
 	private int posI;
 	private int posJ;
 	private String type;
-	public Piece(Player p, Game g, String name,String type) {
+
+	public Piece(Player p, Game g, String name, String type) {
 		owner = p;
 		this.game = g;
 		this.name = name;
-		this.type=type;
+		this.type = type;
 	}
+
 	public String getType() {
 		return type;
 	}
+
 	public abstract String getImageName();
 
 	@Override
@@ -367,4 +371,28 @@ public abstract class Piece implements Movable {
 		return s;
 
 	}
+
+	public abstract ArrayList<Direction> getAllowedDirections();
+
+	public ArrayList<Direction> getAllDirections() {
+		ArrayList<Direction> ans = new ArrayList();
+		ans.add(Direction.LEFT);
+		ans.add(Direction.RIGHT);
+		ans.add(Direction.UP);
+		ans.add(Direction.DOWN);
+		ans.add(Direction.UPLEFT);
+		ans.add(Direction.UPRIGHT);
+		ans.add(Direction.DOWNLEFT);
+		ans.add(Direction.DOWNRIGHT);
+		return ans;
+	}
+	public ArrayList<Direction> getOrthogonalDirections() {
+		ArrayList<Direction> ans = new ArrayList();
+		ans.add(Direction.LEFT);
+		ans.add(Direction.RIGHT);
+		ans.add(Direction.UP);
+		ans.add(Direction.DOWN);
+		return ans;
+	}
+	
 }

@@ -1,5 +1,8 @@
 package model.pieces.heroes;
 
+import java.util.ArrayList;
+
+import model.game.Direction;
 import model.game.Game;
 import model.game.Player;
 
@@ -32,4 +35,10 @@ public class Armored extends NonActivatablePowerHero {
 	public String getImageName() {
 		return this.getType()+(isArmorUp()?"Up":"Down")+"p1";
 	}
+
+	@Override
+	public ArrayList<Direction> getAllowedDirections() {
+		return getAllDirections();
+	}
+	
 }

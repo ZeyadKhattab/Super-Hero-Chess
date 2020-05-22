@@ -1,5 +1,7 @@
 package model.pieces.heroes;
 
+import java.util.ArrayList;
+
 import exceptions.OccupiedCellException;
 import exceptions.WrongTurnException;
 import model.game.Direction;
@@ -122,5 +124,10 @@ public class Speedster extends NonActivatablePowerHero {
 	@Override
 	public String getImageName() {
 		return this.getType() + "p1";
+	}
+
+	@Override
+	public ArrayList<Direction> getAllowedDirections() {
+		return getAllDirections();
 	}
 }
