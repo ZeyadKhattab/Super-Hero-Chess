@@ -342,7 +342,7 @@ public abstract class Piece implements Movable {
 			break;
 
 		}
-
+		adjustBounds(p);
 		return p;
 
 	}
