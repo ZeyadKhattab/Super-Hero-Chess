@@ -83,6 +83,10 @@ public abstract class Piece implements Movable {
 		}
 	}
 
+	public void move(Point to) throws OccupiedCellException, WrongTurnException {
+		MoveHelper(to.x, to.y, null);
+	}
+
 	public void moveUp() throws UnallowedMovementException, OccupiedCellException, WrongTurnException {
 
 		int newX = posI - 1;
@@ -386,6 +390,7 @@ public abstract class Piece implements Movable {
 		ans.add(Direction.DOWNRIGHT);
 		return ans;
 	}
+
 	public ArrayList<Direction> getOrthogonalDirections() {
 		ArrayList<Direction> ans = new ArrayList();
 		ans.add(Direction.LEFT);
@@ -394,5 +399,5 @@ public abstract class Piece implements Movable {
 		ans.add(Direction.DOWN);
 		return ans;
 	}
-	
+
 }

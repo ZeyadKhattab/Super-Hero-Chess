@@ -7,6 +7,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import exceptions.OccupiedCellException;
+import exceptions.UnallowedMovementException;
+import exceptions.WrongTurnException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -26,7 +29,11 @@ public class Controller implements Initializable {
 	private GridPane board;
 	private Piece selected;
 	private Game game;
-	private ArrayList<Button> moveToButtons = new ArrayList();
+	private int[][] boardState;
+
+	static final int moveTo = 1;
+	static final int attack = 2;
+	static final int SELECTED = 3;
 
 	public void setGame(Game game) {
 		this.game = game;
@@ -36,6 +43,12 @@ public class Controller implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		Game game = new Game();
 		setGame(game);
+		drawBoard();
+		boardState = new int[game.getBoardHeight()][game.getBoardWidth()];
+
+	}
+
+	public void drawBoard() {
 		for (int i = 0; i < game.getBoardHeight(); i++)
 			for (int j = 0; j < game.getBoardWidth(); j++) {
 				Cell cell = game.getCellAt(i, j);
@@ -47,8 +60,15 @@ public class Controller implements Initializable {
 					Image image = new Image(input);
 					ImageView imageView = new ImageView(image);
 					button = new Button("", imageView);
-					button.setId("" + (i * game.getBoardHeight() + j));
-					button.setOnAction(event -> selectCell(event));
+					button.setId("" + (i * game.getBoardWidth() + j));
+					button.setOnAction(event -> {
+						try {
+							selectCell(event);
+						} catch (UnallowedMovementException | OccupiedCellException | WrongTurnException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					});
 					board.add(button, j, i);
 				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block
@@ -56,58 +76,76 @@ public class Controller implements Initializable {
 				}
 
 			}
-
 	}
 
-	private void selectCell(ActionEvent event) {
-		if (selected != null) {
-			int oldId = selected.getPosI() * game.getBoardHeight() + selected.getPosJ();
-			System.out.println("old " + oldId);
-			Button oldButton = (Button) board.lookup("#" + oldId);
-			oldButton.setStyle(/* "-fx-background-color: blue;" */"");
-		}
+	private void selectCell(ActionEvent event)
+			throws UnallowedMovementException, OccupiedCellException, WrongTurnException {
+		System.out.println(board.getChildren().size());
 		Button btn = ((Button) event.getSource());
-		int id = Integer.parseInt(btn.getId());
-		System.out.println("new " + id);
-		int row = id / game.getBoardHeight(), col = id % game.getBoardHeight();
-		if (game.getCellAt(row, col).getPiece() == null || game.getCellAt(row, col).getPiece() == selected) {
+		int[] rc = getRowCol(btn);
+		int row = rc[0], col = rc[1];
+		if (boardState[row][col] == moveTo || boardState[row][col] == attack) {
+			selected.move(new Point(row, col));
+
+			refresh();
+			return;
+		}
+		Piece targetPiece = game.getCellAt(row, col).getPiece();
+		if (targetPiece == null || targetPiece.getOwner() != game.getCurrentPlayer()) {
 			clear();
 			return;
 		}
-		selected = game.getCellAt(row, col).getPiece();
-		if (selected != null) {
-			btn.setStyle("-fx-background-color: yellow;");
-			highlightRelevantMovements();
-		}
+		clear();
 
+		selected = game.getCellAt(row, col).getPiece();
+		boardState[row][col] = SELECTED;
+		btn.setStyle("-fx-background-color: yellow;");
+		highlightRelevantMovements();
+
+	}
+
+	private void refresh() {
+
+		clear();
+		board.getChildren().clear();
+		drawBoard();
+
+	}
+
+	int[] getRowCol(Button btn) {
+		int id = Integer.parseInt(btn.getId());
+		int row = id / game.getBoardWidth(), col = id % game.getBoardWidth();
+		return new int[] { row, col };
 	}
 
 	public void highlightRelevantMovements() {
 		ArrayList<Direction> allowedMovements = selected.getAllowedDirections();
-		if (selected instanceof Speedster) {
 
-		} else {
-			for (Direction dir : allowedMovements) {
-				Point to = selected.getDirectionPos(new Point(selected.getPosI(), selected.getPosJ()), dir);
-				int id = to.x * game.getBoardHeight() + to.y;
-				Button newButton = (Button) board.lookup("#" + id);
+		for (Direction dir : allowedMovements) {
+			Point to = selected.getDirectionPos(new Point(selected.getPosI(), selected.getPosJ()), dir);
+			Piece targetPiece = game.getCellAt(to.x, to.y).getPiece();
+			if (selected instanceof Speedster)
+				to = selected.getDirectionPos(to, dir);
+			int id = to.x * game.getBoardWidth() + to.y;
+			Button newButton = (Button) board.lookup("#" + id);
+			if (targetPiece == null) {
 				newButton.setStyle("-fx-background-color: green;");
-				moveToButtons.add(newButton);
+				boardState[to.x][to.y] = moveTo;
+			} else if (targetPiece.getOwner() != selected.getOwner()) {
+				newButton.setStyle("-fx-background-color: red;");
+				boardState[to.x][to.y] = attack;
 			}
 		}
 
 	}
 
 	void clear() {
-		for (Button btn : moveToButtons)
-			btn.setStyle("");
-		if (selected != null) {
-			int oldId = selected.getPosI() * game.getBoardHeight() + selected.getPosJ();
-			Button oldButton = (Button) board.lookup("#" + oldId);
-			oldButton.setStyle("");
-		}
 		selected = null;
-		moveToButtons.clear();
+		for (int i = 0, id = 0; i < boardState.length; i++)
+			for (int j = 0; j < boardState[i].length; j++, id++) {
+				boardState[i][j] = 0;
+				board.lookup("#" + id).setStyle("");
+			}
 
 	}
 
