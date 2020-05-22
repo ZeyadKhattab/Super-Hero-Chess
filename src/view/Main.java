@@ -51,6 +51,28 @@ public class Main extends Application {
 		buttons.getChildren().add(usePower);
 		pane.setTop(buttons);
 
+		attack.setOnAction(value -> {
+			Piece selected = board.getSelected();
+			if (selected == null)
+				board.nullifySelected();
+			else {
+//				System.out.println(selected);
+				String dir = JOptionPane.showInputDialog("Enter direction");
+				
+
+			}
+
+		});
+
+		usePower.setOnAction(value -> {
+			Piece selected = board.getSelected();
+			if (selected == null)
+				board.nullifySelected();
+			else {
+				System.out.println(selected);
+			}
+		});
+
 	}
 
 }

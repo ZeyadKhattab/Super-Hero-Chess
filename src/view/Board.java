@@ -29,9 +29,9 @@ public class Board {
 
 				button.setId("" + (i * game.getBoardHeight() + j));
 				button.setOnAction(value -> {
-					int id=Integer.parseInt(((Button) value.getSource()).getId());
-					int row=id/game.getBoardHeight(),col=id%game.getBoardHeight();
-					selected=game.getCellAt(row, col).getPiece();
+					int id = Integer.parseInt(((Button) value.getSource()).getId());
+					int row = id / game.getBoardHeight(), col = id % game.getBoardHeight();
+					selected = game.getCellAt(row, col).getPiece();
 				});
 				gridPane.add(button, j, i);
 			}
@@ -44,6 +44,9 @@ public class Board {
 
 	public Piece getSelected() {
 		return selected;
+	}
+	void nullifySelected() {
+		selected=null;
 	}
 
 }
