@@ -23,10 +23,9 @@ import model.game.Game;
 import model.game.Player;
 import model.pieces.Piece;
 
-public class Main extends Application {
+public class GUI extends Application {
 
 	public static void main(String[] args) {
-
 		Application.launch(args);
 	}
 
@@ -58,7 +57,6 @@ public class Main extends Application {
 			else {
 //				System.out.println(selected);
 				String dir = JOptionPane.showInputDialog("Enter direction");
-				
 
 			}
 
