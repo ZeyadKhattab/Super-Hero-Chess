@@ -3,6 +3,7 @@ package view;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
+
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -12,10 +13,10 @@ import model.game.Game;
 import model.pieces.Piece;
 
 public class Board {
-	private GridPane board;
+	GridPane board;
 	private Piece selected;
 
-	Board(Game game) throws FileNotFoundException {
+	public Board(Game game) throws FileNotFoundException {
 		GridPane gridPane = new GridPane();
 		for (int i = 0; i < game.getBoardHeight(); i++)
 			for (int j = 0; j < game.getBoardWidth(); j++) {
@@ -35,6 +36,7 @@ public class Board {
 				});
 				gridPane.add(button, j, i);
 			}
+		System.out.println(board);
 		this.board = gridPane;
 	}
 
@@ -45,8 +47,9 @@ public class Board {
 	public Piece getSelected() {
 		return selected;
 	}
+
 	void nullifySelected() {
-		selected=null;
+		selected = null;
 	}
 
 }
