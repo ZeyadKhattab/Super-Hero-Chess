@@ -3,8 +3,7 @@ package view;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
-import model.game.Game;
-import model.game.Player;
+
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 
@@ -20,7 +19,6 @@ public class GUI extends Application {
 		Scene scene = new Scene(root,900,700);
 		primaryStage.setScene(scene);
 		primaryStage.show();
-		Board board=new Board(new Game(new Player("zoz"),new Player("bro")));
 
 	}
 

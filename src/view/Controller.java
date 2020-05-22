@@ -14,12 +14,13 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import model.game.Cell;
 import model.game.Game;
+import model.pieces.Piece;
 
 public class Controller implements Initializable {
 
 	@FXML
 	private GridPane board;
-	private Cell selected;
+	private Piece selected;
 	private Game game;
 
 	public void setGame(Game game) {
@@ -41,7 +42,6 @@ public class Controller implements Initializable {
 					Image image = new Image(input);
 					ImageView imageView = new ImageView(image);
 					button = new Button("", imageView);
-
 					button.setId("" + (i * game.getBoardHeight() + j));
 					button.setOnAction(event -> selectCell(event));
 					board.add(button, j, i);
@@ -55,10 +55,18 @@ public class Controller implements Initializable {
 	}
 
 	private void selectCell(ActionEvent event) {
-
-		int id = Integer.parseInt(((Button) event.getSource()).getId());
+		if (selected != null) {
+			int oldId = selected.getPosI() * game.getBoardHeight() + selected.getPosJ();
+			System.out.println("old " + oldId);
+			Button oldButton = (Button) board.lookup("#" + oldId);
+			oldButton.setStyle(/* "-fx-background-color: blue;" */"");
+		}
+		Button btn = ((Button) event.getSource());
+		int id = Integer.parseInt(btn.getId());
+		System.out.println("new " + id);
 		int row = id / game.getBoardHeight(), col = id % game.getBoardHeight();
-		selected = game.getCellAt(row, col);
+		selected = game.getCellAt(row, col).getPiece();
+		btn.setStyle("-fx-background-color: red;");
 
 	}
 
