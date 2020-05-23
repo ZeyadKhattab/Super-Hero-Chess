@@ -11,7 +11,7 @@ public class Armored extends NonActivatablePowerHero {
 	private boolean armorUp;
 
 	public Armored(Player player, Game game, String name) {
-		super(player, game, name,"armored");
+		super(player, game, name, "armored");
 		this.armorUp = true;
 	}
 
@@ -25,20 +25,20 @@ public class Armored extends NonActivatablePowerHero {
 
 	@Override
 	public String toString() {
-		String s=super.toString();
-		s = s + this.getName()+" (Armored)\n";
-		s+="Armor Up: "+armorUp;
+		String s = super.toString();
+		s = s + this.getName() + " (Armored)\n";
+		s += "Armor Up: " + armorUp;
 		return s;
 	}
 
 	@Override
 	public String getImageName() {
-		return this.getType()+(isArmorUp()?"Up":"Down")+"p1";
+		return this.getType() + (isArmorUp() ? "Up" : "Down") + "p" + this.getOwner().getPlayerNum(getGame());
 	}
 
 	@Override
 	public ArrayList<Direction> getAllowedDirections() {
 		return getAllDirections();
 	}
-	
+
 }

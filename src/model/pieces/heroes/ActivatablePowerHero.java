@@ -19,7 +19,7 @@ public abstract class ActivatablePowerHero extends Hero {
 	}
 
 	public String getImageName() {
-		return getType() + "P" + (isPowerUsed() ? "Used" : "NotUsed") + "p1";
+		return getType() + "P" + (isPowerUsed() ? "Used" : "NotUsed") + "p" + this.getOwner().getPlayerNum(getGame());
 	}
 
 	public void usePower(Direction d, Piece target, Point newPos) throws InvalidPowerUseException, WrongTurnException {

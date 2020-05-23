@@ -123,7 +123,7 @@ public class Speedster extends NonActivatablePowerHero {
 
 	@Override
 	public String getImageName() {
-		return this.getType() + "p1";
+		return this.getType() + "p"+this.getOwner().getPlayerNum(getGame());
 	}
 
 	@Override
