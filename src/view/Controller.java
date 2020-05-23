@@ -56,7 +56,8 @@ public class Controller implements Initializable {
 
 				FileInputStream input;
 				try {
-					input = new FileInputStream(cell.isEmpty() ? "images/empty.jpg" : "images/resize.jpg");
+					input = new FileInputStream(
+							cell.isEmpty() ? "images/empty.jpg" : "images/" + cell.getPiece().getImageName() + ".jpg");
 					Image image = new Image(input);
 					ImageView imageView = new ImageView(image);
 					button = new Button("", imageView);
@@ -80,7 +81,6 @@ public class Controller implements Initializable {
 
 	private void selectCell(ActionEvent event)
 			throws UnallowedMovementException, OccupiedCellException, WrongTurnException {
-		System.out.println(board.getChildren().size());
 		Button btn = ((Button) event.getSource());
 		int[] rc = getRowCol(btn);
 		int row = rc[0], col = rc[1];
