@@ -33,9 +33,7 @@ import model.game.Direction;
 import model.game.Game;
 import model.game.Player;
 import model.pieces.Piece;
-import model.pieces.heroes.ActivatablePowerHero;
 import model.pieces.heroes.*;
-import model.pieces.heroes.Speedster;
 
 public class Controller implements Initializable {
 
@@ -213,6 +211,78 @@ public class Controller implements Initializable {
 
 	}
 
+	public void handlePowerUse(Ranged curr) {
+		ArrayList<Direction> directions = selected.getOrthogonalDirections();
+		boolean ans = false;
+		for (Direction d : directions) {
+			Piece hit = null;
+			Direction chosenDir = null;
+			if (d == Direction.RIGHT) {
+				for (int j = selected.getPosJ() + 1; j < game.getBoardWidth(); j++) {
+					hit = getGame().getCellAt(curr.getPosI(), j).getPiece();
+					chosenDir = d;
+					if (hit != null) {
+						chosenDir = d;
+
+						break;
+					}
+				}
+			} else if (d == Direction.LEFT) {
+				for (int j = curr.getPosJ() - 1; j >= 0; j--) {
+					hit = getGame().getCellAt(curr.getPosI(), j).getPiece();
+
+					if (hit != null) {
+						chosenDir = d;
+						break;
+					}
+				}
+			} else if (d == Direction.UP) {
+				for (int i = curr.getPosI() - 1; i >= 0; i--) {
+					hit = getGame().getCellAt(i, curr.getPosJ()).getPiece();
+					if (hit != null) {
+						chosenDir = d;
+						break;
+					}
+				}
+			} else if (d == Direction.DOWN) {
+				for (int i = curr.getPosI() + 1; i < getGame().getBoardHeight(); i++) {
+					hit = getGame().getCellAt(i, curr.getPosJ()).getPiece();
+					if (hit != null) {
+						chosenDir = d;
+						break;
+					}
+				}
+			}
+			if (hit != null && hit.getOwner() != curr.getOwner()) {
+				int row = hit.getPosI(), col = hit.getPosJ();
+				boardState[row][col] = power;
+				powerDirection[row][col] = chosenDir;
+			}
+
+		}
+	}
+
+	private void handlePowerUse(Super hero) {
+		ArrayList<Direction> directions = hero.getOrthogonalDirections();
+		for (Direction dir : directions) {
+			Point p1 = hero.getDirectionPos(new Point(hero.getPosI(), hero.getPosJ()), dir);
+			Point p2 = hero.getDirectionPos(p1, dir);
+			Piece target;
+			target = game.getCellAt(p1.x, p1.y).getPiece();
+			if (target != null && target.getOwner() != hero.getOwner()) {
+				boardState[p1.x][p1.y] = power;
+				powerDirection[p1.x][p1.y] = dir;
+			}
+			target = game.getCellAt(p2.x, p2.y).getPiece();
+			if (target != null && target.getOwner() != hero.getOwner()) {
+				boardState[p2.x][p2.y] = power;
+				powerDirection[p2.x][p2.y] = dir;
+			}
+
+		}
+
+	}
+
 	public void handlePowerUse() {
 		if (selected == null || selected.getOwner() != game.getCurrentPlayer()
 				|| !(selected instanceof ActivatablePowerHero))
@@ -225,53 +295,10 @@ public class Controller implements Initializable {
 		selected = tmp;
 
 		if (curr instanceof Ranged) {
-			ArrayList<Direction> directions = selected.getOrthogonalDirections();
-			for (Direction d : directions) {
-				Piece hit = null;
-				Direction chosenDir = null;
-				if (d == Direction.RIGHT) {
-					for (int j = selected.getPosJ() + 1; j < game.getBoardWidth(); j++) {
-						hit = getGame().getCellAt(curr.getPosI(), j).getPiece();
-						chosenDir = d;
-						if (hit != null) {
-							chosenDir = d;
-
-							break;
-						}
-					}
-				} else if (d == Direction.LEFT) {
-					for (int j = curr.getPosJ() - 1; j >= 0; j--) {
-						hit = getGame().getCellAt(curr.getPosI(), j).getPiece();
-
-						if (hit != null) {
-							chosenDir = d;
-							break;
-						}
-					}
-				} else if (d == Direction.UP) {
-					for (int i = curr.getPosI() - 1; i >= 0; i--) {
-						hit = getGame().getCellAt(i, curr.getPosJ()).getPiece();
-						if (hit != null) {
-							chosenDir = d;
-							break;
-						}
-					}
-				} else if (d == Direction.DOWN) {
-					for (int i = curr.getPosI() + 1; i < getGame().getBoardHeight(); i++) {
-						hit = getGame().getCellAt(i, curr.getPosJ()).getPiece();
-						if (hit != null) {
-							chosenDir = d;
-							break;
-						}
-					}
-				}
-				if (hit != null && hit.getOwner() != curr.getOwner()) {
-					int row = hit.getPosI(), col = hit.getPosJ();
-					boardState[row][col] = power;
-					powerDirection[row][col] = chosenDir;
-				}
-
-			}
+			handlePowerUse((Ranged) curr);
+		}
+		if (curr instanceof Super) {
+			handlePowerUse((Super) curr);
 
 		}
 		colorPowerCells();
