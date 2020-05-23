@@ -59,7 +59,7 @@ public class Game {
 	}
 
 	public Game() {
-		this(new Player("Player 1"), new Player("Player 2"));
+		this(new Player("Zoz"), new Player("His Bro"));
 	}
 
 	public Game(Player player1, Player player2) {

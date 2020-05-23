@@ -29,9 +29,9 @@
       </GridPane>
    </center>
    <top>
-      <Label prefHeight="45.0" prefWidth="46.0" text="Player 1" BorderPane.alignment="CENTER" />
+      <Label prefHeight="45.0" prefWidth="46.0" text="Player 2" BorderPane.alignment="CENTER" fx:id="player2Label" />
    </top>
    <bottom>
-      <Label prefHeight="45.0" prefWidth="46.0" text="Player 2" BorderPane.alignment="CENTER" />
+      <Label prefHeight="45.0" prefWidth="46.0" text="Player 1" BorderPane.alignment="CENTER" fx:id="player1Label"/>
    </bottom>
 </BorderPane>

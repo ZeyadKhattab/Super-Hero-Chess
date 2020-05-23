@@ -14,9 +14,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.TextAlignment;
 import model.game.Cell;
 import model.game.Direction;
 import model.game.Game;
@@ -27,6 +29,8 @@ public class Controller implements Initializable {
 
 	@FXML
 	private GridPane board;
+	@FXML
+	private Label player1Label, player2Label;
 	private Piece selected;
 	private Game game;
 	private int[][] boardState;
@@ -43,6 +47,8 @@ public class Controller implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		Game game = new Game();
 		setGame(game);
+		player1Label.setText(game.getPlayer1().getName());
+		player2Label.setText(game.getPlayer2().getName());
 		drawBoard();
 		boardState = new int[game.getBoardHeight()][game.getBoardWidth()];
 
@@ -77,6 +83,14 @@ public class Controller implements Initializable {
 				}
 
 			}
+		Label label = game.getCurrentPlayer() == game.getPlayer1() ? player1Label : player2Label;
+
+		label.setStyle(
+				"-fx-background-color: darkslateblue; -fx-text-fill: white;fx-alignment:center; -fx-padding:10;");
+		if (player1Label != label)
+			player1Label.setStyle("");
+		else
+			player2Label.setStyle("");
 	}
 
 	private void selectCell(ActionEvent event)
