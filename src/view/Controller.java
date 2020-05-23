@@ -1,11 +1,15 @@
 package view;
 
 import java.awt.Point;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+
+import javax.imageio.ImageIO;
 
 import exceptions.OccupiedCellException;
 import exceptions.UnallowedMovementException;
@@ -31,6 +35,8 @@ public class Controller implements Initializable {
 	private GridPane board;
 	@FXML
 	private Label player1Label, player2Label;
+	@FXML
+	private ImageView player1PayLoad, player2PayLoad;
 	private Piece selected;
 	private Game game;
 	private int[][] boardState;
@@ -91,6 +97,18 @@ public class Controller implements Initializable {
 			player1Label.setStyle("");
 		else
 			player2Label.setStyle("");
+		try {
+			// player 1
+			Image img = new Image(new FileInputStream(game.getPlayer1().getPayloadPos() + ".png"));
+			player1PayLoad.setImage(img);
+			// player 2
+			img = new Image(new FileInputStream(game.getPlayer2().getPayloadPos() + ".png"));
+			player2PayLoad.setImage(img);
+
+		} catch (Exception e) {
+			System.out.println(e);
+
+		}
 	}
 
 	private void selectCell(ActionEvent event)
