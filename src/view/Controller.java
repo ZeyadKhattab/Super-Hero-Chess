@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -19,6 +20,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -82,6 +84,9 @@ public class Controller implements Initializable {
 							e.printStackTrace();
 						}
 					});
+
+					if (cell.getPiece() != null)
+						button.setTooltip(new Tooltip(cell.getPiece().toString()));
 					board.add(button, j, i);
 				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block
@@ -136,11 +141,13 @@ public class Controller implements Initializable {
 
 	}
 
-	private void refresh() {
-
+	private void refresh()  {
 		clear();
 		board.getChildren().clear();
 		drawBoard();
+		if(game.getWinner()!=null) {
+			System.out.println(game.getWinner().getName());
+		}
 
 	}
 

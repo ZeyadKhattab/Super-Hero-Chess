@@ -15,7 +15,7 @@ import model.pieces.sidekicks.SideKickP2;
 
 public class Game {
 
-	private final int payloadPosTarget = 6;
+	private final int payloadPosTarget = 7;
 	private final int boardWidth = 6;
 
 	private final int boardHeight = 7;
