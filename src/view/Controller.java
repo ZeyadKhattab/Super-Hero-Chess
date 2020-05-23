@@ -13,6 +13,7 @@ import java.util.ResourceBundle;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
+import exceptions.InvalidPowerUseException;
 import exceptions.OccupiedCellException;
 import exceptions.UnallowedMovementException;
 import exceptions.WrongTurnException;
@@ -24,6 +25,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.TextAlignment;
 import model.game.Cell;
@@ -31,6 +33,8 @@ import model.game.Direction;
 import model.game.Game;
 import model.game.Player;
 import model.pieces.Piece;
+import model.pieces.heroes.ActivatablePowerHero;
+import model.pieces.heroes.*;
 import model.pieces.heroes.Speedster;
 
 public class Controller implements Initializable {
@@ -44,10 +48,11 @@ public class Controller implements Initializable {
 	private Piece selected;
 	private Game game;
 	private int[][] boardState;
-
+	private Direction[][] powerDirection;
 	static final int moveTo = 1;
 	static final int attack = 2;
 	static final int SELECTED = 3;
+	static final int power = 4;
 
 	public void setGame(Game game) {
 		this.game = game;
@@ -63,6 +68,12 @@ public class Controller implements Initializable {
 		player2Label.setText(game.getPlayer2().getName());
 		drawBoard();
 		boardState = new int[game.getBoardHeight()][game.getBoardWidth()];
+		board.setOnKeyPressed(e -> {
+			if (e.getCode() == KeyCode.P) {
+				handlePowerUse();
+			}
+		});
+		powerDirection = new Direction[game.getBoardHeight()][game.getBoardWidth()];
 
 	}
 
@@ -83,7 +94,8 @@ public class Controller implements Initializable {
 					button.setOnAction(event -> {
 						try {
 							selectCell(event);
-						} catch (UnallowedMovementException | OccupiedCellException | WrongTurnException e) {
+						} catch (UnallowedMovementException | OccupiedCellException | WrongTurnException
+								| InvalidPowerUseException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
@@ -121,13 +133,18 @@ public class Controller implements Initializable {
 	}
 
 	private void selectCell(ActionEvent event)
-			throws UnallowedMovementException, OccupiedCellException, WrongTurnException {
+			throws UnallowedMovementException, OccupiedCellException, WrongTurnException, InvalidPowerUseException {
 		Button btn = ((Button) event.getSource());
 		int[] rc = getRowCol(btn);
 		int row = rc[0], col = rc[1];
 		if (boardState[row][col] == moveTo || boardState[row][col] == attack) {
 			selected.move(new Point(row, col));
 
+			refresh();
+			return;
+		}
+		if (boardState[row][col] == power) {
+			((ActivatablePowerHero) selected).usePower(powerDirection[row][col], null, null);
 			refresh();
 			return;
 		}
@@ -194,6 +211,84 @@ public class Controller implements Initializable {
 				board.lookup("#" + id).setStyle("");
 			}
 
+	}
+
+	public void handlePowerUse() {
+		if (selected == null || selected.getOwner() != game.getCurrentPlayer()
+				|| !(selected instanceof ActivatablePowerHero))
+			return;
+		ActivatablePowerHero curr = (ActivatablePowerHero) selected;
+		if (curr.isPowerUsed())
+			return;
+		Piece tmp = selected;
+		clear();
+		selected = tmp;
+
+		if (curr instanceof Ranged) {
+			ArrayList<Direction> directions = selected.getOrthogonalDirections();
+			for (Direction d : directions) {
+				Piece hit = null;
+				Direction chosenDir = null;
+				if (d == Direction.RIGHT) {
+					for (int j = selected.getPosJ() + 1; j < game.getBoardWidth(); j++) {
+						hit = getGame().getCellAt(curr.getPosI(), j).getPiece();
+						chosenDir = d;
+						if (hit != null) {
+							chosenDir = d;
+
+							break;
+						}
+					}
+				} else if (d == Direction.LEFT) {
+					for (int j = curr.getPosJ() - 1; j >= 0; j--) {
+						hit = getGame().getCellAt(curr.getPosI(), j).getPiece();
+
+						if (hit != null) {
+							chosenDir = d;
+							break;
+						}
+					}
+				} else if (d == Direction.UP) {
+					for (int i = curr.getPosI() - 1; i >= 0; i--) {
+						hit = getGame().getCellAt(i, curr.getPosJ()).getPiece();
+						if (hit != null) {
+							chosenDir = d;
+							break;
+						}
+					}
+				} else if (d == Direction.DOWN) {
+					for (int i = curr.getPosI() + 1; i < getGame().getBoardHeight(); i++) {
+						hit = getGame().getCellAt(i, curr.getPosJ()).getPiece();
+						if (hit != null) {
+							chosenDir = d;
+							break;
+						}
+					}
+				}
+				if (hit != null && hit.getOwner() != curr.getOwner()) {
+					int row = hit.getPosI(), col = hit.getPosJ();
+					boardState[row][col] = power;
+					powerDirection[row][col] = chosenDir;
+				}
+
+			}
+
+		}
+		colorPowerCells();
+	}
+
+	void colorPowerCells() {
+		for (int i = 0, id = 0; i < game.getBoardHeight(); i++)
+			for (int j = 0; j < game.getBoardWidth(); j++, id++)
+				if (boardState[i][j] == power) {
+					Button btn = (Button) board.lookup("#" + id);
+					btn.setStyle("-fx-background-color: red;");
+				}
+	}
+
+	private Game getGame() {
+		// TODO Auto-generated method stub
+		return game;
 	}
 
 }

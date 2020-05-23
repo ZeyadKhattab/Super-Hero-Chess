@@ -13,6 +13,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 
 public class GUI extends Application {
 
@@ -26,7 +27,7 @@ public class GUI extends Application {
 		Scene scene = new Scene(root, 900, 700);
 		primaryStage.setScene(scene);
 		primaryStage.show();
-		scene.getStylesheets().add("org/kordamp/bootstrapfx/bootstrapfx.css"); //(3)
+		scene.getStylesheets().add("org/kordamp/bootstrapfx/bootstrapfx.css"); // (3)
 		
 
 	}
