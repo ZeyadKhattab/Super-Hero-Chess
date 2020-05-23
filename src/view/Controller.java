@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 
 import exceptions.OccupiedCellException;
 import exceptions.UnallowedMovementException;
@@ -28,6 +29,7 @@ import javafx.scene.text.TextAlignment;
 import model.game.Cell;
 import model.game.Direction;
 import model.game.Game;
+import model.game.Player;
 import model.pieces.Piece;
 import model.pieces.heroes.Speedster;
 
@@ -53,7 +55,9 @@ public class Controller implements Initializable {
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		Game game = new Game();
+		String player1Name = JOptionPane.showInputDialog("Player 1 Name"),
+				player2Name = JOptionPane.showInputDialog("Player 2 Name");
+		Game game = new Game(new Player(player1Name), new Player(player2Name));
 		setGame(game);
 		player1Label.setText(game.getPlayer1().getName());
 		player2Label.setText(game.getPlayer2().getName());
@@ -141,13 +145,17 @@ public class Controller implements Initializable {
 
 	}
 
-	private void refresh()  {
+	private void refresh() {
 		clear();
 		board.getChildren().clear();
-		drawBoard();
-		if(game.getWinner()!=null) {
-			System.out.println(game.getWinner().getName());
-		}
+		if (game.getWinner() != null) {
+			board.getChildren().clear();
+			Label winnerLabel = new Label(game.getWinner().getName() + " is the Winner");
+			winnerLabel.setStyle("-fx-font-size:15");
+			winnerLabel.getStyleClass().add("lbl-success");
+			board.add(winnerLabel, 3, 3);
+		} else
+			drawBoard();
 
 	}
 
