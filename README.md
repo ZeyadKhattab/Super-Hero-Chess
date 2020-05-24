@@ -9,8 +9,8 @@ A board game inspired by Chess where each piece is a superhero with a special po
 
 | Hero | Allowed Movements| Power
 | ------------- |-------------|-----
-| Ranged |⬅️⬆️➡️⬇️↖️↘️↙️↗️| Attack an enemy in the orthogonal directions provided that no friendly piece lies in the way
-| Super  |⬅️ ⬆️ ➡️ ⬇️   | Eliminate enemy pieces within 2 sqaures in any orthogonal direction
+| Ranged |⬅️⬆️➡️⬇️↖️↘️↙️↗️| Attack an enemy in one of the orthogonal directions provided that no friendly piece lies in the way (does not have to be adjacent)
+| Super  |⬅️ ⬆️ ➡️ ⬇️   | Eliminate all enemy pieces that lie within 2 sqaures in any orthogonal direction
 | Medic  |⬅️ ⬆️ ➡️ ⬇️| Revive a friendly piece in any adjacent cell
 | Tech  |↖️↘️↗️ ↙️ | <ol><li>Restore power of a friendly piece.</li><li>Hack an enemy's piece taking away the chance to use its power.</li><li>Can teleport any friendly piece (othet than itself) anywhere on the board.</li></ol>
 |Armored |⬅️⬆️➡️⬇️↖️↘️↙️↗️|Survies the first attack
