@@ -1,6 +1,7 @@
 # Super Hero Chess
 A board game inspired by Chess where each piece is a superhero with a special power.
 
+![](https://i.ibb.co/m6f6473/game.png)
 ## Rules
 * A turn based 2 Player game where the player who reaches the target payload (7) first wins the game.
 * Killing a hero renders a point, killing a sidekick renders half a point.
@@ -18,7 +19,8 @@ A board game inspired by Chess where each piece is a superhero with a special po
 |Sidekick (Player 1)|	⬇️⬆️➡️↘️↗️| Transofrms into the hero it attacks
 |Sidekick (Player 2)|	⬅️⬇️⬆️↖️↙️|Transofrms into the hero it attacks
 
-## Dependencies
+## Dependencies 
 * [JavaFX](https://openjfx.io/)
 * [BootstrapFX](https://github.com/kordamp/bootstrapfx)
+* Make sure to include them in the classpath of your project
 
