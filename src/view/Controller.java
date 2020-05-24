@@ -116,10 +116,10 @@ public class Controller implements Initializable {
 			player2Label.setStyle("");
 		try {
 			// player 1
-			Image img = new Image(new FileInputStream("images/"+game.getPlayer1().getPayloadPos() + ".png"));
+			Image img = new Image(new FileInputStream("images/" + game.getPlayer1().getPayloadPos() + ".png"));
 			player1PayLoad.setImage(img);
 			// player 2
-			img = new Image(new FileInputStream("images/"+game.getPlayer2().getPayloadPos() + ".png"));
+			img = new Image(new FileInputStream("images/" + game.getPlayer2().getPayloadPos() + ".png"));
 			player2PayLoad.setImage(img);
 
 		} catch (Exception e) {
@@ -211,9 +211,10 @@ public class Controller implements Initializable {
 
 		for (Direction dir : allowedMovements) {
 			Point to = selected.getDirectionPos(new Point(selected.getPosI(), selected.getPosJ()), dir);
-			Piece targetPiece = game.getCellAt(to.x, to.y).getPiece();
 			if (selected instanceof Speedster)
 				to = selected.getDirectionPos(to, dir);
+			Piece targetPiece = game.getCellAt(to.x, to.y).getPiece();
+
 			int id = to.x * game.getBoardWidth() + to.y;
 			Button newButton = (Button) board.lookup("#" + id);
 			if (targetPiece == null) {
