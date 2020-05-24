@@ -1,22 +1,16 @@
 package view;
 
 import java.awt.Point;
-import java.awt.image.BufferedImage;
-import java.io.File;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 
-import exceptions.InvalidPowerUseException;
-import exceptions.OccupiedCellException;
-import exceptions.UnallowedMovementException;
-import exceptions.WrongTurnException;
+import exceptions.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -27,11 +21,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
-import javafx.scene.text.TextAlignment;
-import model.game.Cell;
-import model.game.Direction;
-import model.game.Game;
-import model.game.Player;
+
+import model.game.*;
 import model.pieces.Piece;
 import model.pieces.heroes.*;
 
@@ -125,10 +116,10 @@ public class Controller implements Initializable {
 			player2Label.setStyle("");
 		try {
 			// player 1
-			Image img = new Image(new FileInputStream(game.getPlayer1().getPayloadPos() + ".png"));
+			Image img = new Image(new FileInputStream("images/"+game.getPlayer1().getPayloadPos() + ".png"));
 			player1PayLoad.setImage(img);
 			// player 2
-			img = new Image(new FileInputStream(game.getPlayer2().getPayloadPos() + ".png"));
+			img = new Image(new FileInputStream("images/"+game.getPlayer2().getPayloadPos() + ".png"));
 			player2PayLoad.setImage(img);
 
 		} catch (Exception e) {
@@ -169,7 +160,7 @@ public class Controller implements Initializable {
 								board.lookup("#" + id).setStyle("");
 								boardState[i][j] = 0;
 							}
-							if(i==rc[0] && j==rc[1])
+							if (i == rc[0] && j == rc[1])
 								board.lookup("#" + id).setStyle("-fx-background-color:red;");
 
 						}
@@ -417,7 +408,6 @@ public class Controller implements Initializable {
 	}
 
 	private Game getGame() {
-		// TODO Auto-generated method stub
 		return game;
 	}
 
