@@ -52,6 +52,7 @@ public class Controller implements Initializable {
 	static final int SELECTED = 3;
 	static final int power = 4;
 	private Piece revive;
+	private int[] teleportTo;
 
 	public void setGame(Game game) {
 		this.game = game;
@@ -151,7 +152,23 @@ public class Controller implements Initializable {
 			if (selected instanceof Medic && revive == null) {
 				return;
 			}
-			((ActivatablePowerHero) selected).usePower(powerDirection[row][col], revive, null); // maybe a medic
+			if (selected instanceof Tech) {
+				Piece p = game.getCellAt(row, col).getPiece();
+				if (p != null) {
+					((Tech) selected).usePower(null, p,
+							teleportTo == null ? null : new Point(teleportTo[0], teleportTo[1]));
+				} else {
+//					teleportTo = rc;
+//					for(int i=0,id=0;i<game.getBoardHeight();i++)
+//						for(int j=0;j<game.getBoardWidth();j++,id++) {
+//							board.lookup("#"+id).setStyle(arg0);;
+//							
+//						}
+				}
+				
+			}
+			else
+				((ActivatablePowerHero) selected).usePower(powerDirection[row][col], revive, null); // maybe a medic
 			refresh();
 			return;
 		}
@@ -213,6 +230,7 @@ public class Controller implements Initializable {
 	void clear() {
 		selected = null;
 		revive = null;
+		teleportTo = null;
 		for (int i = 0, id = 0; i < boardState.length; i++)
 			for (int j = 0; j < boardState[i].length; j++, id++) {
 				boardState[i][j] = 0;
@@ -352,7 +370,32 @@ public class Controller implements Initializable {
 		}
 		if (curr instanceof Medic)
 			handlePowerUse((Medic) curr);
-		colorPowerCells();
+		if (curr instanceof Tech)
+			handlePowerUse((Tech) curr);
+		if (!(curr instanceof Tech))
+			colorPowerCells();
+	}
+
+	private void handlePowerUse(Tech hero) {
+		for (int i = 0, id = 0; i < game.getBoardHeight(); i++)
+			for (int j = 0; j < game.getBoardWidth(); j++, id++) {
+				Piece curr = game.getCellAt(i, j).getPiece();
+				if (curr == null || (curr.getOwner() == hero.getOwner() && curr instanceof ActivatablePowerHero
+						&& ((ActivatablePowerHero) curr).isPowerUsed())) {
+					// restore or move
+					Button btn = (Button) board.lookup("#" + id);
+					btn.setStyle("-fx-background-color:green");
+					boardState[i][j] = power;
+				} else if (curr != null && curr.getOwner() != hero.getOwner() && curr instanceof ActivatablePowerHero
+						&& !((ActivatablePowerHero) curr).isPowerUsed()) {
+					//hack
+					Button btn = (Button) board.lookup("#" + id);
+					btn.setStyle("-fx-background-color:red");
+					boardState[i][j] = power;
+				}
+
+			}
+
 	}
 
 	void colorPowerCells() {
