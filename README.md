@@ -5,7 +5,7 @@ A board game inspired by Chess where each piece is a superhero with a special po
 * A turn based 2 Player game where the player who reaches the target payload (7) first wins the game.
 * Killing a hero renders a point, killing a sidekick renders half a point.
 * In each turn, you muse either chose to use a special power or to move to a cell (either empty cell or to an enemy cell to attack it)
-* Checkout this repo's Wiki for the complete rules
+* Checkout this repo's [Wiki](../../wiki) for the complete rules
 
 | Hero | Allowed Movements| Power
 | ------------- |-------------|-----
