@@ -158,16 +158,25 @@ public class Controller implements Initializable {
 					((Tech) selected).usePower(null, p,
 							teleportTo == null ? null : new Point(teleportTo[0], teleportTo[1]));
 				} else {
-//					teleportTo = rc;
-//					for(int i=0,id=0;i<game.getBoardHeight();i++)
-//						for(int j=0;j<game.getBoardWidth();j++,id++) {
-//							board.lookup("#"+id).setStyle(arg0);;
-//							
-//						}
+					teleportTo = rc;
+					for (int i = 0, id = 0; i < game.getBoardHeight(); i++)
+						for (int j = 0; j < game.getBoardWidth(); j++, id++) {
+							Piece curr = game.getCellAt(i, j).getPiece();
+							if (curr != null && curr.getOwner() == selected.getOwner() && curr != selected) {
+								board.lookup("#" + id).setStyle("-fx-background-color:green;");
+								boardState[i][j] = power;
+							} else if (curr != selected) {
+								board.lookup("#" + id).setStyle("");
+								boardState[i][j] = 0;
+							}
+							if(i==rc[0] && j==rc[1])
+								board.lookup("#" + id).setStyle("-fx-background-color:red;");
+
+						}
+					return;
 				}
-				
-			}
-			else
+
+			} else
 				((ActivatablePowerHero) selected).usePower(powerDirection[row][col], revive, null); // maybe a medic
 			refresh();
 			return;
@@ -388,7 +397,7 @@ public class Controller implements Initializable {
 					boardState[i][j] = power;
 				} else if (curr != null && curr.getOwner() != hero.getOwner() && curr instanceof ActivatablePowerHero
 						&& !((ActivatablePowerHero) curr).isPowerUsed()) {
-					//hack
+					// hack
 					Button btn = (Button) board.lookup("#" + id);
 					btn.setStyle("-fx-background-color:red");
 					boardState[i][j] = power;
