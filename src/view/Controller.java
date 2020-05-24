@@ -38,7 +38,7 @@ import model.pieces.heroes.*;
 public class Controller implements Initializable {
 
 	@FXML
-	private GridPane board;
+	private GridPane board, graveYard;
 	@FXML
 	private Label player1Label, player2Label;
 	@FXML
@@ -51,6 +51,7 @@ public class Controller implements Initializable {
 	static final int attack = 2;
 	static final int SELECTED = 3;
 	static final int power = 4;
+	private Piece revive;
 
 	public void setGame(Game game) {
 		this.game = game;
@@ -68,7 +69,12 @@ public class Controller implements Initializable {
 		boardState = new int[game.getBoardHeight()][game.getBoardWidth()];
 		board.setOnKeyPressed(e -> {
 			if (e.getCode() == KeyCode.P) {
-				handlePowerUse();
+				try {
+					handlePowerUse();
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 		powerDirection = new Direction[game.getBoardHeight()][game.getBoardWidth()];
@@ -142,7 +148,10 @@ public class Controller implements Initializable {
 			return;
 		}
 		if (boardState[row][col] == power) {
-			((ActivatablePowerHero) selected).usePower(powerDirection[row][col], null, null);
+			if (selected instanceof Medic && revive == null) {
+				return;
+			}
+			((ActivatablePowerHero) selected).usePower(powerDirection[row][col], revive, null); // maybe a medic
 			refresh();
 			return;
 		}
@@ -203,17 +212,18 @@ public class Controller implements Initializable {
 
 	void clear() {
 		selected = null;
+		revive = null;
 		for (int i = 0, id = 0; i < boardState.length; i++)
 			for (int j = 0; j < boardState[i].length; j++, id++) {
 				boardState[i][j] = 0;
 				board.lookup("#" + id).setStyle("");
 			}
+		graveYard.getChildren().clear();
 
 	}
 
 	public void handlePowerUse(Ranged curr) {
 		ArrayList<Direction> directions = selected.getOrthogonalDirections();
-		boolean ans = false;
 		for (Direction d : directions) {
 			Piece hit = null;
 			Direction chosenDir = null;
@@ -283,7 +293,46 @@ public class Controller implements Initializable {
 
 	}
 
-	public void handlePowerUse() {
+	public Button getButton(Piece p) throws FileNotFoundException {
+		FileInputStream input = new FileInputStream("images/" + p.getImageName() + ".jpg");
+		Image image = new Image(input);
+		ImageView imageView = new ImageView(image);
+		Button button = new Button("", imageView);
+		return button;
+	}
+
+	private void handlePowerUse(Medic hero) throws FileNotFoundException {
+		if (hero.getOwner().getDeadCharacters().size() == 0)
+			return;
+		ArrayList<Direction> directions = hero.getAllDirections();
+		for (Direction dir : directions) {
+			Point p = hero.getDirectionPos(new Point(hero.getPosI(), hero.getPosJ()), dir);
+			if (game.getCellAt(p.x, p.y).getPiece() == null) {
+				boardState[p.x][p.y] = power;
+				powerDirection[p.x][p.y] = dir;
+			}
+		}
+		ArrayList<Piece> dead = hero.getOwner().getDeadCharacters();
+		int row = 0, col = 0;
+		for (int i = 0; i < dead.size(); i++) {
+			Piece piece = dead.get(i);
+			Button btn = getButton(piece);
+
+			btn.setId("" + i);
+			btn.setOnAction(event -> {
+				revive = dead.get(Integer.parseInt(btn.getId()));
+			});
+			graveYard.add(btn, col, row);
+			col++;
+			if (col == 3) {
+				col = 0;
+				row++;
+			}
+		}
+
+	}
+
+	public void handlePowerUse() throws FileNotFoundException {
 		if (selected == null || selected.getOwner() != game.getCurrentPlayer()
 				|| !(selected instanceof ActivatablePowerHero))
 			return;
@@ -301,6 +350,8 @@ public class Controller implements Initializable {
 			handlePowerUse((Super) curr);
 
 		}
+		if (curr instanceof Medic)
+			handlePowerUse((Medic) curr);
 		colorPowerCells();
 	}
 
