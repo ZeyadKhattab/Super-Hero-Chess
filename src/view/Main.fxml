@@ -50,15 +50,16 @@
 		</GridPane>
 	</center>
 	<top>
-		<Label fx:id="player2Label" prefHeight="45.0" prefWidth="80.0"
-			text="Player 2" textAlignment="CENTER" BorderPane.alignment="CENTER" />
+		<Label fx:id="player2Label" text="Player 2"
+			BorderPane.alignment="CENTER" />
 	</top>
 	<bottom>
-		<Label fx:id="player1Label" prefHeight="45.0" prefWidth="80.0"
-			text="Player 1" textAlignment="CENTER" BorderPane.alignment="CENTER" />
+		<Label fx:id="player1Label" text="Player 1"
+			textAlignment="CENTER" BorderPane.alignment="CENTER" />
 	</bottom>
 	<left>
-		<VBox BorderPane.alignment="TOP_LEFT">
+		<VBox maxWidth="-Infinity" prefHeight="716.0" prefWidth="183.0"
+			BorderPane.alignment="TOP_LEFT">
 			<children>
 				<ImageView fx:id="player2PayLoad" fitHeight="316.0"
 					fitWidth="129.0" pickOnBounds="true" preserveRatio="true">

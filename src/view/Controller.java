@@ -108,8 +108,7 @@ public class Controller implements Initializable {
 			}
 		Label label = game.getCurrentPlayer() == game.getPlayer1() ? player1Label : player2Label;
 
-		label.setStyle(
-				"-fx-background-color: darkslateblue; -fx-text-fill: white;fx-alignment:center; -fx-padding:10;");
+		label.setStyle("-fx-background-color: darkslateblue; -fx-text-fill: white;-fx-alignment:center;-fx-padding:5;");
 		if (player1Label != label)
 			player1Label.setStyle("");
 		else
