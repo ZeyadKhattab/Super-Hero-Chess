@@ -17,3 +17,8 @@ A board game inspired by Chess where each piece is a superhero with a special po
 |Speedster |⬅️⬆️➡️⬇️↖️↘️↙️↗️|Takes two movements in one turn
 |Sidekick (Player 1)|	⬇️⬆️➡️↘️↗️| Transofrms into the hero it attacks
 |Sidekick (Player 2)|	⬅️⬇️⬆️↖️↙️|Transofrms into the hero it attacks
+
+## Dependencies
+* [JavaFX](https://openjfx.io/)
+* [BootstrapFX](https://github.com/kordamp/bootstrapfx)
+
