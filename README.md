@@ -1,6 +1,8 @@
 # Super Hero Chess
 A board game inspired by Chess where each piece is a superhero with a special power.
 
+This game was implemented using OOP Paradigm and MVC design pattern.
+
 ![](https://i.ibb.co/m6f6473/game.png)
 ## Rules
 * A turn based 2 Player game where the player who reaches the target payload (7) first wins the game.
