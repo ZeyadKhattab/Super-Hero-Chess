@@ -1,6 +1,7 @@
 package model.pieces.heroes;
 
 import java.awt.Point;
+import java.util.ArrayList;
 
 import exceptions.InvalidPowerTargetException;
 import exceptions.InvalidPowerUseException;
@@ -14,7 +15,7 @@ import model.pieces.Piece;
 public class Tech extends ActivatablePowerHero {
 
 	public Tech(Player player, Game game, String name) {
-		super(player, game, name);
+		super(player, game, name, "tech");
 	}
 
 	@Override
@@ -38,8 +39,7 @@ public class Tech extends ActivatablePowerHero {
 	}
 
 	@Override
-	public void usePower(Direction d, Piece target, Point newPos)
-			throws InvalidPowerUseException, WrongTurnException {
+	public void usePower(Direction d, Piece target, Point newPos) throws InvalidPowerUseException, WrongTurnException {
 
 		super.usePower(d, target, newPos);
 
@@ -49,28 +49,20 @@ public class Tech extends ActivatablePowerHero {
 			if (target.getOwner() == getOwner()) {
 
 				if (getGame().getCellAt(newPos.x, newPos.y).getPiece() != null) {
-					throw new InvalidPowerTargetException(
-							this.getName()
-									+ " can not place "
-									+ target.getName()
-									+ " in the specified cell or direction as this cell is occupied",
-							this, target);
+					throw new InvalidPowerTargetException(this.getName() + " can not place " + target.getName()
+							+ " in the specified cell or direction as this cell is occupied", this, target);
 				} else {
 
 					getGame().getCellAt(newPos.x, newPos.y).setPiece(target);
-					getGame().getCellAt(target.getPosI(), target.getPosJ())
-							.setPiece(null);
+					getGame().getCellAt(target.getPosI(), target.getPosJ()).setPiece(null);
 					target.setPosI(newPos.x);
 					target.setPosJ(newPos.y);
 					setPowerUsed(true);
 
 				}
 			} else {
-				throw new InvalidPowerTargetException(
-						this.getName()
-								+ " can not choose "
-								+ target.getName()
-								+ " as a target because of incompatible target's side with the power requirement (Enemy/Ally)",
+				throw new InvalidPowerTargetException(this.getName() + " can not choose " + target.getName()
+						+ " as a target because of incompatible target's side with the power requirement (Enemy/Ally)",
 						this, target);
 			}
 		} else {
@@ -84,10 +76,8 @@ public class Tech extends ActivatablePowerHero {
 						((Armored) target).setArmorUp(false);
 						setPowerUsed(true);
 					} else
-						throw new InvalidPowerTargetException(this.getName()
-								+ " can not hack " + target.getName()
-								+ " as target's power is already used", this,
-								target);
+						throw new InvalidPowerTargetException(this.getName() + " can not hack " + target.getName()
+								+ " as target's power is already used", this, target);
 				}
 
 				if (target instanceof ActivatablePowerHero) {
@@ -96,10 +86,8 @@ public class Tech extends ActivatablePowerHero {
 						((ActivatablePowerHero) target).setPowerUsed(true);
 						setPowerUsed(true);
 					} else {
-						throw new InvalidPowerTargetException(this.getName()
-								+ " can not hack " + target.getName()
-								+ " as target's power is already used", this,
-								target);
+						throw new InvalidPowerTargetException(this.getName() + " can not hack " + target.getName()
+								+ " as target's power is already used", this, target);
 					}
 				}
 			}
@@ -113,10 +101,8 @@ public class Tech extends ActivatablePowerHero {
 						((Armored) target).setArmorUp(true);
 						setPowerUsed(true);
 					} else
-						throw new InvalidPowerTargetException(this.getName()
-								+ " can not restore " + target.getName()
-								+ "'s power as it is already not used", this,
-								target);
+						throw new InvalidPowerTargetException(this.getName() + " can not restore " + target.getName()
+								+ "'s power as it is already not used", this, target);
 
 				}
 
@@ -126,10 +112,8 @@ public class Tech extends ActivatablePowerHero {
 						((ActivatablePowerHero) target).setPowerUsed(false);
 						setPowerUsed(true);
 					} else {
-						throw new InvalidPowerTargetException(this.getName()
-								+ " can not restore " + target.getName()
-								+ "'s power as it is already not used", this,
-								target);
+						throw new InvalidPowerTargetException(this.getName() + " can not restore " + target.getName()
+								+ "'s power as it is already not used", this, target);
 					}
 				}
 			}
@@ -138,9 +122,20 @@ public class Tech extends ActivatablePowerHero {
 
 	@Override
 	public String toString() {
-		String s=super.toString();
-		s = s + this.getName()+" (tech)\n";
-		s += "Power Used: "+this.isPowerUsed();
+		String s = super.toString();
+		s = s + this.getName() + " (tech)\n";
+		s += "Power Used: " + this.isPowerUsed();
 		return s;
 	}
+
+	@Override
+	public ArrayList<Direction> getAllowedDirections() {
+		ArrayList<Direction> ans = new ArrayList();
+		ans.add(Direction.DOWNLEFT);
+		ans.add(Direction.DOWNRIGHT);
+		ans.add(Direction.UPLEFT);
+		ans.add(Direction.UPRIGHT);
+		return ans;
+	}
+
 }

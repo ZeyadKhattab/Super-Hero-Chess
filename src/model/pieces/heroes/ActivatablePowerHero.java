@@ -14,12 +14,15 @@ public abstract class ActivatablePowerHero extends Hero {
 
 	private boolean powerUsed;
 
-	public ActivatablePowerHero(Player player, Game game, String name) {
-		super(player, game, name);
+	public ActivatablePowerHero(Player player, Game game, String name, String type) {
+		super(player, game, name, type);
 	}
 
-	public void usePower(Direction d, Piece target, Point newPos)
-			throws InvalidPowerUseException, WrongTurnException {
+	public String getImageName() {
+		return getType() + "P" + (isPowerUsed() ? "Used" : "NotUsed") + "p" + this.getOwner().getPlayerNum(getGame());
+	}
+
+	public void usePower(Direction d, Piece target, Point newPos) throws InvalidPowerUseException, WrongTurnException {
 
 		if (getOwner() != getGame().getCurrentPlayer())
 			throw new WrongTurnException(this);

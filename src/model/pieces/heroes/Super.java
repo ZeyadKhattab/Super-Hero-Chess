@@ -1,6 +1,7 @@
 package model.pieces.heroes;
 
 import java.awt.Point;
+import java.util.ArrayList;
 
 import exceptions.InvalidPowerDirectionException;
 import exceptions.InvalidPowerUseException;
@@ -15,7 +16,7 @@ import model.pieces.Piece;
 public class Super extends ActivatablePowerHero {
 
 	public Super(Player player, Game game, String name) {
-		super(player, game, name);
+		super(player, game, name,"super");
 	}
 
 	@Override
@@ -92,5 +93,10 @@ public class Super extends ActivatablePowerHero {
 		s = s + this.getName()+" (super)\n";
 		s += "Power Used: "+this.isPowerUsed();
 		return s;
+	}
+
+	@Override
+	public ArrayList<Direction> getAllowedDirections() {
+		return getOrthogonalDirections();
 	}
 }

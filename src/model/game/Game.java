@@ -15,7 +15,7 @@ import model.pieces.sidekicks.SideKickP2;
 
 public class Game {
 
-	private final int payloadPosTarget = 6;
+	private final int payloadPosTarget = 7;
 	private final int boardWidth = 6;
 
 	private final int boardHeight = 7;
@@ -28,27 +28,28 @@ public class Game {
 	private Player player2;
 
 	private Player currentPlayer;
-	
+
 	private Player winner;
 
 	private Cell[][] board;
-	private Piece attacker,defender;
-	public Piece getAttacker()
-	{
+	private Piece attacker, defender;
+
+	public Piece getAttacker() {
 		return attacker;
 	}
-	public Piece getDefender()
-	{
+
+	public Piece getDefender() {
 		return defender;
 	}
-	public void setAttacker(Piece p)
-	{
-		attacker=p;
+
+	public void setAttacker(Piece p) {
+		attacker = p;
 	}
-	public void setDefender(Piece p)
-	{
-		defender=p;
+
+	public void setDefender(Piece p) {
+		defender = p;
 	}
+
 	public Cell getCellAt(int i, int j) {
 		return board[i][j];
 	}
@@ -57,8 +58,11 @@ public class Game {
 		board[i][j].setPiece(p);
 	}
 
+	public Game() {
+		this(new Player("Zoz"), new Player("His Bro"));
+	}
+
 	public Game(Player player1, Player player2) {
-		super();
 		this.player1 = player1;
 		this.player2 = player2;
 
@@ -74,12 +78,12 @@ public class Game {
 	public void setCurrentPlayer(Player currentPlayer) {
 		this.currentPlayer = currentPlayer;
 	}
-	
-	public Player getWinner(){
+
+	public Player getWinner() {
 		return winner;
 	}
-	
-	public void setWinner(Player winner){
+
+	public void setWinner(Player winner) {
 		this.winner = winner;
 	}
 
@@ -120,7 +124,7 @@ public class Game {
 
 		Armored a1 = new Armored(player1, this, "Captain America");
 		board[p1InitRow + 1][ind1.remove(0)].setPiece(a1);
-		
+
 		Armored a2 = new Armored(player2, this, "Captain America");
 		board[p2InitRow][ind2.remove(0)].setPiece(a2);
 
@@ -211,6 +215,10 @@ public class Game {
 
 	public int getBoardHeight() {
 		return boardHeight;
+	}
+
+	public Cell[][] getBoard() {
+		return board;
 	}
 
 }

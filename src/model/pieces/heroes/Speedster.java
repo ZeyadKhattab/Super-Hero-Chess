@@ -1,5 +1,7 @@
 package model.pieces.heroes;
 
+import java.util.ArrayList;
+
 import exceptions.OccupiedCellException;
 import exceptions.WrongTurnException;
 import model.game.Direction;
@@ -9,7 +11,7 @@ import model.game.Player;
 public class Speedster extends NonActivatablePowerHero {
 
 	public Speedster(Player player, Game game, String name) {
-		super(player, game, name);
+		super(player, game, name, "speedster");
 	}
 
 	@Override
@@ -85,8 +87,7 @@ public class Speedster extends NonActivatablePowerHero {
 	}
 
 	@Override
-	public void moveDownRight() throws OccupiedCellException,
-			WrongTurnException {
+	public void moveDownRight() throws OccupiedCellException, WrongTurnException {
 
 		int newX = getPosI() + 2;
 		int newY = getPosJ() + 2;
@@ -115,8 +116,18 @@ public class Speedster extends NonActivatablePowerHero {
 
 	@Override
 	public String toString() {
-		String s=super.toString();
-		s = s + this.getName()+" (speedster)\n";
+		String s = super.toString();
+		s = s + this.getName() + " (speedster)\n";
 		return s;
+	}
+
+	@Override
+	public String getImageName() {
+		return this.getType() + "p"+this.getOwner().getPlayerNum(getGame());
+	}
+
+	@Override
+	public ArrayList<Direction> getAllowedDirections() {
+		return getAllDirections();
 	}
 }

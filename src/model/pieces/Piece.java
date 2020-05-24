@@ -1,6 +1,7 @@
 package model.pieces;
 
 import java.awt.Point;
+import java.util.ArrayList;
 
 import exceptions.OccupiedCellException;
 import exceptions.UnallowedMovementException;
@@ -24,16 +25,23 @@ public abstract class Piece implements Movable {
 	private Game game;
 	private int posI;
 	private int posJ;
+	private String type;
 
-	public Piece(Player p, Game g, String name) {
+	public Piece(Player p, Game g, String name, String type) {
 		owner = p;
 		this.game = g;
 		this.name = name;
+		this.type = type;
 	}
 
+	public String getType() {
+		return type;
+	}
+
+	public abstract String getImageName();
+
 	@Override
-	public void move(Direction r) throws UnallowedMovementException,
-			OccupiedCellException, WrongTurnException {
+	public void move(Direction r) throws UnallowedMovementException, OccupiedCellException, WrongTurnException {
 
 		if (this.getOwner() != getGame().getCurrentPlayer())
 			throw new WrongTurnException(this);
@@ -75,8 +83,11 @@ public abstract class Piece implements Movable {
 		}
 	}
 
-	public void moveUp() throws UnallowedMovementException,
-			OccupiedCellException, WrongTurnException {
+	public void move(Point to) throws OccupiedCellException, WrongTurnException {
+		MoveHelper(to.x, to.y, null);
+	}
+
+	public void moveUp() throws UnallowedMovementException, OccupiedCellException, WrongTurnException {
 
 		int newX = posI - 1;
 
@@ -88,8 +99,7 @@ public abstract class Piece implements Movable {
 
 	}
 
-	public void moveDown() throws UnallowedMovementException,
-			OccupiedCellException, WrongTurnException {
+	public void moveDown() throws UnallowedMovementException, OccupiedCellException, WrongTurnException {
 
 		int newX = posI + 1;
 
@@ -101,8 +111,7 @@ public abstract class Piece implements Movable {
 
 	}
 
-	public void moveRight() throws UnallowedMovementException,
-			OccupiedCellException, WrongTurnException {
+	public void moveRight() throws UnallowedMovementException, OccupiedCellException, WrongTurnException {
 
 		int newY = posJ + 1;
 
@@ -114,8 +123,7 @@ public abstract class Piece implements Movable {
 
 	}
 
-	public void moveLeft() throws UnallowedMovementException,
-			OccupiedCellException, WrongTurnException {
+	public void moveLeft() throws UnallowedMovementException, OccupiedCellException, WrongTurnException {
 
 		int newY = posJ - 1;
 
@@ -127,8 +135,7 @@ public abstract class Piece implements Movable {
 
 	}
 
-	public void moveUpRight() throws UnallowedMovementException,
-			OccupiedCellException, WrongTurnException {
+	public void moveUpRight() throws UnallowedMovementException, OccupiedCellException, WrongTurnException {
 
 		int newX = posI - 1;
 		int newY = posJ + 1;
@@ -145,8 +152,7 @@ public abstract class Piece implements Movable {
 
 	}
 
-	public void moveUpLeft() throws UnallowedMovementException,
-			OccupiedCellException, WrongTurnException {
+	public void moveUpLeft() throws UnallowedMovementException, OccupiedCellException, WrongTurnException {
 
 		int newX = posI - 1;
 		int newY = posJ - 1;
@@ -163,8 +169,7 @@ public abstract class Piece implements Movable {
 
 	}
 
-	public void moveDownRight() throws UnallowedMovementException,
-			OccupiedCellException, WrongTurnException {
+	public void moveDownRight() throws UnallowedMovementException, OccupiedCellException, WrongTurnException {
 
 		int newX = posI + 1;
 		int newY = posJ + 1;
@@ -181,8 +186,7 @@ public abstract class Piece implements Movable {
 
 	}
 
-	public void moveDownLeft() throws UnallowedMovementException,
-			OccupiedCellException, WrongTurnException {
+	public void moveDownLeft() throws UnallowedMovementException, OccupiedCellException, WrongTurnException {
 
 		int newX = posI + 1;
 		int newY = posJ - 1;
@@ -203,7 +207,7 @@ public abstract class Piece implements Movable {
 		getGame().setAttacker(this);
 		getGame().setDefender(target);
 		if (!(target instanceof Armored && ((Armored) target).isArmorUp())) {
-			
+
 			if (target instanceof SideKick) {
 				owner.setSideKilled(owner.getSideKilled() + 1);
 				target.getOwner().getDeadCharacters().add(target);
@@ -216,17 +220,17 @@ public abstract class Piece implements Movable {
 			} else {
 				owner.setPayloadPos(owner.getPayloadPos() + 1);
 				target.getOwner().getDeadCharacters().add(target);
-				if(target instanceof Super)
+				if (target instanceof Super)
 					target.getOwner().getDeadCharacters2()[0].push(target);
-				else if(target instanceof Ranged)
+				else if (target instanceof Ranged)
 					target.getOwner().getDeadCharacters2()[1].push(target);
-				else if(target instanceof Medic)
+				else if (target instanceof Medic)
 					target.getOwner().getDeadCharacters2()[2].push(target);
-				else if(target instanceof Armored)
+				else if (target instanceof Armored)
 					target.getOwner().getDeadCharacters2()[3].push(target);
-				else if(target instanceof Speedster)
+				else if (target instanceof Speedster)
 					target.getOwner().getDeadCharacters2()[4].push(target);
-				else if(target instanceof Tech)
+				else if (target instanceof Tech)
 					target.getOwner().getDeadCharacters2()[5].push(target);
 			}
 
@@ -244,19 +248,17 @@ public abstract class Piece implements Movable {
 		}
 	}
 
-	public void MoveHelper(int newX, int newY, Direction d)
-			throws OccupiedCellException, WrongTurnException {
+	public void MoveHelper(int newX, int newY, Direction d) throws OccupiedCellException, WrongTurnException {
 
 		Cell oldCell = game.getCellAt(posI, posJ);
 		Cell newCell = game.getCellAt(newX, newY);
 		Piece movingPiece = oldCell.getPiece();
 		Piece occupantPiece = newCell.getPiece();
 
-		if ((occupantPiece != null && movingPiece.getOwner() != occupantPiece.owner)
-				|| (occupantPiece == null)) {
+		if ((occupantPiece != null && movingPiece.getOwner() != occupantPiece.owner) || (occupantPiece == null)) {
 			if (occupantPiece != null) {
 				movingPiece.attack(occupantPiece);
-				movingPiece = oldCell.getPiece();
+				movingPiece = oldCell.getPiece(); // in attack the old piece might change in case of sidekick
 			}
 			if (getGame().getCellAt(newX, newY).getPiece() == null) {
 				newCell.setPiece(movingPiece);
@@ -344,7 +346,7 @@ public abstract class Piece implements Movable {
 			break;
 
 		}
-
+		adjustBounds(p);
 		return p;
 
 	}
@@ -367,11 +369,35 @@ public abstract class Piece implements Movable {
 			p.y = game.getBoardWidth() - 1;
 		}
 	}
-	public String toString()
-	{
-		String s=this.getOwner().getName()+"'s team\n";
+
+	public String toString() {
+		String s = this.getOwner().getName() + "'s team\n";
 		return s;
-		
-		
+
 	}
+
+	public abstract ArrayList<Direction> getAllowedDirections();
+
+	public ArrayList<Direction> getAllDirections() {
+		ArrayList<Direction> ans = new ArrayList();
+		ans.add(Direction.LEFT);
+		ans.add(Direction.RIGHT);
+		ans.add(Direction.UP);
+		ans.add(Direction.DOWN);
+		ans.add(Direction.UPLEFT);
+		ans.add(Direction.UPRIGHT);
+		ans.add(Direction.DOWNLEFT);
+		ans.add(Direction.DOWNRIGHT);
+		return ans;
+	}
+
+	public ArrayList<Direction> getOrthogonalDirections() {
+		ArrayList<Direction> ans = new ArrayList();
+		ans.add(Direction.LEFT);
+		ans.add(Direction.RIGHT);
+		ans.add(Direction.UP);
+		ans.add(Direction.DOWN);
+		return ans;
+	}
+
 }
